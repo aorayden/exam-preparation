@@ -1,0 +1,27 @@
+[
+    {
+        "reader_card_number": 1,
+        "books": [
+            "ISPB-0002",
+            "ISPB-0003"
+        ],
+        "date_issue": "24.12.2025",
+        "date_return": "26.12.2025"
+    },
+    {
+        "reader_card_number": 1,
+        "books": [
+            "ISPB-0001"
+        ],
+        "date_issue": "26.12.2025",
+        "date_return": "02.01.2026"
+    },
+    {
+        "reader_card_number": 1,
+        "books": [
+            "ISBN-0005"
+        ],
+        "date_issue": "26.12.2025",
+        "date_return": "02.01.2026"
+    }
+]

@@ -1,0 +1,35 @@
+[
+    {
+        "card_number": 1,
+        "surname": "Кузовкина",
+        "name": "Виктория",
+        "patronymic": "Денисовна",
+        "address": "ул. Кирова 61/2",
+        "phone": "+79172371470",
+        "login": null,
+        "password": null,
+        "role": "Читатель"
+    },
+    {
+        "card_number": 2,
+        "surname": "Файзельгаянов",
+        "name": "Ильнур",
+        "patronymic": "Фадисович",
+        "address": "ул. Кирова 122/3",
+        "phone": "+79272371470",
+        "login": "aorayden",
+        "password": "*<i51V7CEkgS",
+        "role": "Администратор"
+    },
+    {
+        "surname": "АБВГД",
+        "name": "А",
+        "patronymic": "Б",
+        "address": "ул. Ленина 1/3",
+        "phone": "+8281212818",
+        "login": null,
+        "password": null,
+        "role": "Читатель",
+        "card_number": 3
+    }
+]
