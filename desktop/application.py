@@ -64,11 +64,9 @@ class APIService:
         return await self._post('auth/login', {'login': login, 'password': password})
 
     async def get_all_readers(self):
-        # Используем новый эндпоинт, который мы добавили в server.py
         return await self._get('readers')
 
     async def register_user(self, payload):
-        # Используем существующий метод регистрации
         return await self._post('auth/register', payload)
 
     async def get_all_books(self):
@@ -92,25 +90,23 @@ api_service = APIService()
 class TicketWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Оформление выдачи книг')
+        self.setWindowTitle('Оформление читательского дневника')
         self.resize(1200, 800)
 
         # Данные
         self.all_readers = []
-        self.available_books_source = []  # Все свободные, загруженные с сервера
-        self.current_available_books = []  # Те, что отображаются слева
-        self.selected_books = []  # Те, что отображаются справа (выбранные)
+        self.available_books_source = []
+        self.current_available_books = []
+        self.selected_books = []
 
-        self.selected_reader_id = None  # ID выбранного читателя
+        self.selected_reader_id = None
 
         self.setup_ui()
         self.refresh_data()
 
     def setup_ui(self):
-        # Основной вертикальный слой
         main_layout = QVBoxLayout(self)
 
-        # === 1. БЛОК ЧИТАТЕЛЕЙ (ВЕРХ) ===
         readers_group = QWidget()
         readers_layout = QVBoxLayout(readers_group)
         readers_layout.setContentsMargins(0, 0, 0, 0)
@@ -131,26 +127,22 @@ class TicketWindow(QWidget):
         self.table_readers.setSelectionBehavior(QAbstractItemView.SelectionBehavior.SelectRows)
         self.table_readers.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.table_readers.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
-        self.table_readers.setMaximumHeight(200)  # Чтобы не занимала весь экран
-        # Событие клика по строке
+        self.table_readers.setMaximumHeight(200)
         self.table_readers.itemClicked.connect(self.on_reader_clicked)
         readers_layout.addWidget(self.table_readers)
 
         main_layout.addWidget(readers_group)
 
-        # Разделитель
         line1 = QFrame()
         line1.setFrameShape(QFrame.Shape.HLine)
         main_layout.addWidget(line1)
 
-        # === 2. БЛОК КНИГ (СЕРЕДИНА) ===
         lbl_b = QLabel("2. Выберите книги:")
         lbl_b.setFont(QFont("Arial", 12, QFont.Weight.Bold))
         main_layout.addWidget(lbl_b)
 
         books_container = QHBoxLayout()
 
-        # -- Левая таблица (Доступные) --
         left_box = QVBoxLayout()
         lbl_av = QLabel("Доступные книги")
         self.input_search_book = QLineEdit()
@@ -168,7 +160,6 @@ class TicketWindow(QWidget):
         left_box.addWidget(self.input_search_book)
         left_box.addWidget(self.table_available)
 
-        # -- Центральные кнопки --
         center_box = QVBoxLayout()
         center_box.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
@@ -186,7 +177,6 @@ class TicketWindow(QWidget):
         center_box.addSpacing(20)
         center_box.addWidget(btn_to_left)
 
-        # -- Правая таблица (Выбранные) --
         right_box = QVBoxLayout()
         lbl_sel = QLabel("Выбранные к выдаче")
 
@@ -200,14 +190,12 @@ class TicketWindow(QWidget):
         right_box.addWidget(lbl_sel)
         right_box.addWidget(self.table_selected)
 
-        # Добавляем в горизонтальный слой
         books_container.addLayout(left_box, 45)
         books_container.addLayout(center_box, 10)
         books_container.addLayout(right_box, 45)
 
         main_layout.addLayout(books_container)
 
-        # === 3. БЛОК ОФОРМЛЕНИЯ (НИЗ) ===
         line2 = QFrame()
         line2.setFrameShape(QFrame.Shape.HLine)
         main_layout.addWidget(line2)
@@ -217,7 +205,7 @@ class TicketWindow(QWidget):
         lbl_date = QLabel("Дата возврата:")
         self.date_return = QDateEdit()
         self.date_return.setCalendarPopup(True)
-        self.date_return.setDate(QDate.currentDate().addDays(7))  # По умолчанию +неделя
+        self.date_return.setDate(QDate.currentDate().addDays(7))
         self.date_return.setMinimumDate(QDate.currentDate())
 
         self.btn_confirm = QPushButton("ОФОРМИТЬ ВЫДАЧУ")
@@ -232,27 +220,21 @@ class TicketWindow(QWidget):
 
         main_layout.addLayout(bottom_panel)
 
-    # --- ЛОГИКА ЗАГРУЗКИ ---
-
     def refresh_data(self):
         asyncio.create_task(self.load_all())
 
     async def load_all(self):
-        # 1. Читатели
         readers = await api_service.get_all_readers()
         if isinstance(readers, list):
             self.all_readers = readers
             self.filter_readers()
 
-        # 2. Книги (только свободные)
         books = await api_service.get_available_books()
         if isinstance(books, list):
             self.available_books_source = books
-            self.current_available_books = list(self.available_books_source)  # Копия
+            self.current_available_books = list(self.available_books_source)
             self.selected_books = []
             self.update_books_tables()
-
-    # --- ЛОГИКА ЧИТАТЕЛЕЙ ---
 
     def filter_readers(self):
         text = self.reader_search.text().lower().strip()
@@ -267,7 +249,6 @@ class TicketWindow(QWidget):
             row = self.table_readers.rowCount()
             self.table_readers.insertRow(row)
 
-            # Скрываем ID в UserRole или просто используем колонку 0
             self.table_readers.setItem(row, 0, QTableWidgetItem(str(r['card_number'])))
             self.table_readers.setItem(row, 1, QTableWidgetItem(r['surname']))
             self.table_readers.setItem(row, 2, QTableWidgetItem(r['name']))
@@ -275,15 +256,10 @@ class TicketWindow(QWidget):
 
     def on_reader_clicked(self, item):
         row = item.row()
-        # Номер билета у нас в 0-й колонке
         card_num_str = self.table_readers.item(row, 0).text()
         self.selected_reader_id = int(card_num_str)
-        # Для визуального подтверждения можно подсветить, но Qt и так выделяет
-
-    # --- ЛОГИКА КНИГ (ПЕРЕНОС) ---
 
     def filter_available_books(self):
-        # Фильтрация только левой таблицы, учитывая что книги могут быть уже справа
         text = self.input_search_book.text().lower().strip()
 
         filtered = []
@@ -294,8 +270,7 @@ class TicketWindow(QWidget):
         self.populate_table(self.table_available, filtered)
 
     def update_books_tables(self):
-        # Обновляет обе таблицы на основе списков self.current_available_books и self.selected_books
-        self.filter_available_books()  # Обновит левую с учетом поиска
+        self.filter_available_books()
         self.populate_table(self.table_selected, self.selected_books)
 
     def populate_table(self, table, data_list):
@@ -307,22 +282,16 @@ class TicketWindow(QWidget):
             table.setItem(row, 0, QTableWidgetItem(b['code']))
             table.setItem(row, 1, QTableWidgetItem(b['name']))
             table.setItem(row, 2, QTableWidgetItem(b['author']))
-            # Храним полный объект книги в скрытых данных первой ячейки, чтобы удобно доставать
             table.item(row, 0).setData(Qt.ItemDataRole.UserRole, b)
 
     def move_to_selected(self):
-        # 1. Получаем выбранные строки слева
         rows = sorted(set(index.row() for index in self.table_available.selectedIndexes()), reverse=True)
         if not rows: return
 
         for row in rows:
-            # Достаем объект книги
             book_item = self.table_available.item(row, 0)
-            # В filter_available_books мы не сохраняли объект в UserRole (упростили),
-            # поэтому найдем по коду.
             code = book_item.text()
 
-            # Ищем в списке current_available_books
             book_obj = next((b for b in self.current_available_books if b['code'] == code), None)
 
             if book_obj:
@@ -332,7 +301,6 @@ class TicketWindow(QWidget):
         self.update_books_tables()
 
     def move_to_available(self):
-        # 1. Получаем выбранные строки справа
         rows = sorted(set(index.row() for index in self.table_selected.selectedIndexes()), reverse=True)
         if not rows: return
 
@@ -346,8 +314,6 @@ class TicketWindow(QWidget):
 
         self.update_books_tables()
 
-    # --- ОТПРАВКА ---
-
     def submit_ticket(self):
         if not self.selected_reader_id:
             QMessageBox.warning(self, "Ошибка", "Выберите читателя!")
@@ -359,7 +325,6 @@ class TicketWindow(QWidget):
 
         book_codes = [b['code'] for b in self.selected_books]
 
-        # Формируем JSON
         payload = {
             "reader_card_number": self.selected_reader_id,
             "books": book_codes,
@@ -374,7 +339,7 @@ class TicketWindow(QWidget):
 
         if res.get('success'):
             QMessageBox.information(self, "Успех", "Книги успешно выданы!")
-            self.close()  # Закрываем окно
+            self.close()
         else:
             QMessageBox.critical(self, "Ошибка", res.get('message', 'Error'))
 
@@ -385,7 +350,7 @@ class TicketWindow(QWidget):
 class BooksWindow(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('Управление книжным фондом')
+        self.setWindowTitle('Управление книгами')
         self.resize(1100, 600)
         self.all_books = []
         self.filtered_books = []

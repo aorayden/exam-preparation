@@ -23,5 +23,13 @@
         ],
         "date_issue": "26.12.2025",
         "date_return": "02.01.2026"
+    },
+    {
+        "reader_card_number": 1,
+        "books": [
+            "ISBN-0006"
+        ],
+        "date_issue": "27.12.2025",
+        "date_return": "03.01.2026"
     }
 ]

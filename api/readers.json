@@ -31,5 +31,16 @@
         "password": null,
         "role": "Читатель",
         "card_number": 3
+    },
+    {
+        "surname": "Сидоров",
+        "name": "Петр",
+        "patronymic": "Петрович",
+        "address": "ул. Ленина 10",
+        "phone": "+79990001122",
+        "login": null,
+        "password": null,
+        "role": "Читатель",
+        "card_number": 4
     }
 ]

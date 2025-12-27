@@ -26,5 +26,19 @@
         "name": "dsadsa",
         "year_publication": 2000,
         "sign_novelty_and_annotations": "sada"
+    },
+    {
+        "code": "ISBN-0006",
+        "author": "Файзельгаянов И.Ф.",
+        "name": "ОАИП",
+        "year_publication": 2024,
+        "sign_novelty_and_annotations": "Здесь ничего нет."
+    },
+    {
+        "code": "ISPB-0009",
+        "author": "Тестов",
+        "name": "Тест дубликата",
+        "year_publication": 2025,
+        "sign_novelty_and_annotations": ""
     }
 ]
